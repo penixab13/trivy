@@ -30,15 +30,12 @@ jobs:
           tags: |
            ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
     
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-ref: .
-          scan-type: 'image'
-          image-ref: '${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}'
-          format: 'table'
-          exit-code: '0'
-          ignore-unfixed: true
-          vuln-type: 'os'
-          severity: 'CRITICAL,HIGH'
+      - name:  Run Trivy vulnerability scan
+      run: |
+        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+        aquasec/trivy:latest image \
+        --no-progress \
+        --ignore-unfixed \
+        --severity CRITICAL,HIGH \
+        ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
         
