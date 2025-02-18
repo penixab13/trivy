@@ -31,11 +31,11 @@ jobs:
            ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
     
       - name:  Run Trivy vulnerability scan
-      run: |
-        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-        aquasec/trivy:latest image \
-        --no-progress \
-        --ignore-unfixed \
-        --severity CRITICAL,HIGH \
-        ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+          aquasec/trivy:latest image \
+          --no-progress \
+          --ignore-unfixed \
+          --severity CRITICAL,HIGH \
+          ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
         
