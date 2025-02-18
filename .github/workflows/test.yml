@@ -29,9 +29,6 @@ jobs:
           platforms: linux/amd64
           tags: |
            ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
-      - name : check images
-        run: |
-          docker pull ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
     
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
