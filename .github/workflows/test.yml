@@ -30,16 +30,18 @@ jobs:
           tags: |
            ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
     
-      - name:  Run Trivy vulnerability scan
+      - name: Run Trivy vulnerability scan
         run: |
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-          aquasec/trivy:latest image \
-          --format template --template "@contrib/html.tpl" -o /report/trivy-report.html \
-          --no-progress \
-          --ignore-unfixed \
-          --severity CRITICAL,HIGH \
-          ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
-
+             mkdir -p trivy-reports
+             docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+             -v $(pwd)/trivy-reports:/report \
+             aquasec/trivy:latest image \
+             --no-progress \
+             --ignore-unfixed \
+             --severity CRITICAL,HIGH \
+             --format template --template "@contrib/html.tpl" -o /report/trivy-report.html \
+             ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
+   
       - name: upload trivy report to s3
         uses:  jakejarvis/s3-sync-action@v0.5.1
         with:
