@@ -34,7 +34,7 @@ jobs:
         run: |
              mkdir -p trivy-reports
              docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-             -v $(pwd)/trivy-reports:/report \
+             -v $(pwd)/tC:/report \
              aquasec/trivy:latest image \
              --no-progress \
              --ignore-unfixed \
@@ -51,5 +51,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
-          SOURCE_DIR: "."
+          SOURCE_DIR: "./trivy-reports"
           DEST_DIR: "trivy-reports/"
