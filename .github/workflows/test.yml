@@ -34,7 +34,7 @@ jobs:
         run: |
              mkdir -p trivy-reports
              docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-             -v $(pwd)/tC:/report \
+             -v $(pwd)/trivy-reports:/report \
              aquasec/trivy:latest image \
              --no-progress \
              --ignore-unfixed \
