@@ -41,11 +41,14 @@ jobs:
              --severity CRITICAL,HIGH \
              --format template --template "@contrib/html.tpl" -o /report/trivy-report.html \
              ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
+
+      - name: Vérification du fichier Trivy
+        run: ls -l ./trivy-reports
    
       - name: upload trivy report to s3
         uses:  jakejarvis/s3-sync-action@v0.5.1
         with:
-          args: --acl public-read
+          args: --acl public-read --exclude "*" --include "trivy-report.html"
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
