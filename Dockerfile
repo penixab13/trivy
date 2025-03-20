@@ -6,7 +6,7 @@ COPY pom.xml /usr/src/app
 
 WORKDIR /usr/src/app
 # Run Maven to clean and build the project
-RUN mvn clean package 
+RUN mvn clean install 
 
 # Use OpenJDK 11 runtime for the final image
 FROM amazoncorretto:8u442-alpine3.21-jre 
