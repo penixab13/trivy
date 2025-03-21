@@ -1,21 +1,23 @@
-# Use Maven with JDK 11 for the build stage
-FROM maven:3.9.9-amazoncorretto-23-alpine as build
-# Copy the source code and pom.xml to the container
-COPY src /usr/src/app/src  
-COPY pom.xml /usr/src/app  
-
+# Étape 1 : Compilation avec Maven et JDK 21
+FROM maven:3.9.9-amazoncorretto-21-alpine AS build
 WORKDIR /usr/src/app
-# Run Maven to clean and build the project
-RUN mvn clean install 
 
-# Use OpenJDK 11 runtime for the final image
-FROM amazoncorretto:8u442-alpine3.21-jre 
+# Copier les fichiers nécessaires
+COPY pom.xml .
+COPY src ./src
 
-# Copy the JAR file from the build stage
-COPY --from=build /usr/src/app/target/java-pipeline-test-SNAPSHOT.jar /usr/app/java-pipeline-test-0.0.1-SNAPSHOT.jar  
+# Construire l'application
+RUN mvn clean package -DskipTests
 
-# Expose port 8080 for the application
-EXPOSE 8080  
+# Étape 2 : Exécution avec un JRE 21 léger
+FROM amazoncorretto:21
+WORKDIR /usr/app
 
-# Run the JAR file when the container starts
-CMD ["java", "-jar", "/usr/app/java-pipeline-test-0.0.1-SNAPSHOT.jar"]
+# Copier le fichier JAR depuis l'étape de build
+COPY --from=build /usr/src/app/target/java-pipeline-test-0.0.1-SNAPSHOT.jar /usr/app/app.jar
+
+# Exposer le port utilisé par Spring Boot
+EXPOSE 8080
+
+# Lancer l'application
+CMD ["java", "-jar", "app.jar"]
