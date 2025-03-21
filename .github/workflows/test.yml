@@ -19,16 +19,16 @@ jobs:
         with:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build and test
+      - name: Build and push final image
         uses: docker/build-push-action@v6
         with:
-          target: build
-          push: true
-          context: .
-          platforms: linux/amd64
-          tags: |
-           ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
+            push: true
+            context: .
+            platforms: linux/amd64
+            tags: |
+              ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:${{ github.sha }}
+              ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+        
     
       - name: Run Trivy vulnerability scan
         run: |
