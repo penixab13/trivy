@@ -7,7 +7,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Construire l'application
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -X
 
 # Étape 2 : Exécution avec un JRE 21 léger
 FROM amazoncorretto:21

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: java-app
+spec:
+  containers:
+  - name: java-app
+    image: penixab13/trivy:010b32f23e5d00a56eb25dc6f2c4e073fa883c58
+    ports: 
+    - containerPort: 8000
